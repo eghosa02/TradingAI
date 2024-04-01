@@ -51,7 +51,7 @@ if __name__ == '__main__':
         version = int(file.read().strip())
 
     owner = "eghosa02"
-    repo = "TradingAI"
+    repo = "TradingBot"
     percorso_file = "version.txt"
     contenuto_file = readFromGitHub(owner, repo, percorso_file)
     github_version = ""
