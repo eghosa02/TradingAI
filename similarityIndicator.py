@@ -9,7 +9,7 @@ class similarityIndicator:
     def returnForecast(self):
         return self.forecast
     
-    def trova_sequenza_simile(self, candele_df):
+    def findSequences(self, candele_df):
         num_candele = len(candele_df)
         sequences = []
         ultime_32 = candele_df.iloc[-self.window_size:]

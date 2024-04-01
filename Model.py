@@ -15,7 +15,7 @@ class Model:
     def predictImage(self):
         indicator = self.Cluster.returnIndicator()
         df = self.dataset.tail(5000).reset_index(drop=True)
-        sequenza_simile1, sequenza_simile2 = indicator.trova_sequenza_simile(df)
+        sequenza_simile1, sequenza_simile2 = indicator.findSequences(df)
         sequenza_simile2 = sequenza_simile2.reset_index(drop=True)
         sequenza_simile1 = sequenza_simile1.reset_index(drop=True)
         return sequenza_simile2['Open'][len(sequenza_simile2['Open'])-1], min(sequenza_simile2['Open']), max(sequenza_simile2['Open'])

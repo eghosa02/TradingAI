@@ -12,7 +12,7 @@ from bs4 import BeautifulSoup
 MT4_IP = '127.0.0.1'
 MT4_PORT = 77
 
-def invia_comando_mt4(comando) -> str:
+def sendMt4Command(comando) -> str:
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.connect((MT4_IP, MT4_PORT))
         s.sendall(comando.encode())
@@ -50,7 +50,7 @@ def trade(model:Model) -> tuple:
     td_cells = soup.find_all('td')
     testo_celle = [cella.get_text() for cella in td_cells]
     comando:str = f'{"MSG": "QUOTE", "SYMBOL": {simbol[simbolVal][1]}}\r\n'
-    risposta:dict = invia_comando_mt4(comando)
+    risposta:dict = sendMt4Command(comando)
     info:str = data.split('\n')[1]
     infos:dict = {str(items.split(":")[0]):int(items.split(":")[1]) for items in list(info.split(" "))}
     buy:bool = float(flag) > float(risposta['BID']) and infos['Buy']>infos['Sell']+infos['Neutral'] and int(testo_celle[2].replace("%", "").replace('\n', '').replace('\r', '')) > int(testo_celle[6].replace("%", "").replace('\n', '').replace('\r', ''))
@@ -74,9 +74,9 @@ if __name__ == "__main__":
         if status is not None and len(status) == 0:
             if buy:
                 comando = f"BUY {simbol[simbolVal][2]} 1 {risposta['BID']} {minim-(abs(minim-float(flag)))*0.25} {float(flag)}"
-                risposta = invia_comando_mt4(comando)
+                risposta = sendMt4Command(comando)
                 print("response from MT4: ", risposta) 
             elif sell:
                 comando = f"SELL {simbol[simbolVal][2]} 1 {risposta['BID']} {maxim+(abs(maxim-float(flag)))*0.25} {float(flag)}"
-                risposta = invia_comando_mt4(comando)
+                risposta = sendMt4Command(comando)
                 print("response from MT4: ", risposta) 
