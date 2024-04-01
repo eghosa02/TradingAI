@@ -3,23 +3,19 @@ from bs4 import BeautifulSoup
 from IPython.display import HTML
 
 class ModelScr:
-    def __init__(self, Simbol):
-        self.Simbol = Simbol
-        self.headers = {
+    def __init__(self, Simbol:dict):
+        self.Simbol:dict = Simbol
+        self.headers:dict = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36'
     }
 
     def scrape(self, simbol:int):
-        self.links = [
+        self.links:list[str] = [
             f"https://www.investing.com/currencies/{self.Simbol[simbol][0]}",
             f"https://www.investing.com/currencies/{self.Simbol[simbol][0]}-news",
             f"https://www.investing.com/currencies/{self.Simbol[simbol][0]}-opinion",
             f"https://www.investing.com/currencies/{self.Simbol[simbol][0]}-technical",
-            f"https://www.myfxbook.com/community/outlook/{self.Simbol[simbol][2]}",
-            f"https://www.investing.com/currencies/{self.Simbol[simbol][0]}-candlestick",
-            f"https://www.investing.com/currencies/{self.Simbol[simbol][0]}-commentary",
-            f"https://www.investing.com/currencies/{self.Simbol[simbol][0]}-scoreboard",
-            f"https://www.investing.com/currencies/{self.Simbol[simbol][0]}-rankings"
+            f"https://www.myfxbook.com/community/outlook/{self.Simbol[simbol][2]}"
         ]
         r = Request(url=self.links[3], headers=self.headers)
         response = urlopen(r)

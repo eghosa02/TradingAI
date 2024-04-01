@@ -26,7 +26,7 @@ def move_files(source_dir, destination_dir):
         os.makedirs(destination_dir)
 
     for filename in os.listdir(source_dir):
-        if filename != '.git' and filename != 'README.md' and filename != "launcher.exe":
+        if filename != '.git' and filename != 'README.md':
             source_file_path = os.path.join(source_dir, filename)
             destination_file_path = os.path.join(destination_dir, filename)
 
@@ -36,13 +36,13 @@ def move_files(source_dir, destination_dir):
             shutil.move(source_file_path, destination_dir)
     shutil.rmtree(source_dir, onerror=onerror)
 
-def leggi_file_da_github(owner, repo, percorso_file, branch="master"):
+def readFromGitHub(owner, repo, percorso_file, branch="master"):
     url = f"https://raw.githubusercontent.com/{owner}/{repo}/{branch}/{percorso_file}"
     risposta = requests.get(url)
     if risposta.status_code == 200:
         return risposta.text
     else:
-        print(f"Errore: Impossibile leggere il file ({risposta.status_code})")
+        print(f"Error: Immpossible read the file ({risposta.status_code})")
         return None
 
 if __name__ == '__main__':
@@ -53,7 +53,7 @@ if __name__ == '__main__':
     owner = "eghosa02"
     repo = "TradingAI"
     percorso_file = "version.txt"
-    contenuto_file = leggi_file_da_github(owner, repo, percorso_file)
+    contenuto_file = readFromGitHub(owner, repo, percorso_file)
     github_version = ""
 
     if contenuto_file is not None:
@@ -68,12 +68,5 @@ if __name__ == '__main__':
         download_changes(repo_url, local_path)
         move_files(local_path, dest_path)
         print("update done")
-    else:
-        print("already updated")
-        
-    if os.path.exists(os.path.join(os.getcwd(), "main.exe")):
-        subprocess.run(["./main"])
-    elif os.path.exists(os.path.join(os.getcwd(), "main.py")):
-        subprocess.run(["python", "./main.py"])
-    else:
-        print("eseguibile non trovato")
+
+    subprocess.run(["python", "./trading_bot.py"])

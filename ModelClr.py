@@ -9,15 +9,10 @@ import msgpack
 
 
 class ModelClr:
-    def __init__(self, groups, class_cluster, directions, data_t, ranked, simbol, window_indicator, forecast):
-        self.simbol = simbol
-        self.groups = groups
-        self.class_cluster = class_cluster
-        self.ranked = ranked
-        self.data_t = data_t
-        self.directions = directions
+    def __init__(self, simbol:dict, window_indicator:int, forecast:int):
+        self.simbol:dict = simbol
         self.sequences = None
-        self.indicator = similarityIndicator(window_indicator, forecast)
+        self.indicator:similarityIndicator = similarityIndicator(window_indicator, forecast)
 
     def fromArrayToImage(self, df):
         res = len(df['Open'])
@@ -40,7 +35,7 @@ class ModelClr:
         return blank
     
     def classify_image_cosin(self, candele_df):
-        coss = []
+        coss:list[float] = []
         with open(f"datas_version.msgpack", "rb") as file:
             sequences = file.read()
         self.sequences = msgpack.unpackb(sequences, raw=False)
@@ -49,7 +44,7 @@ class ModelClr:
             norm_B = np.linalg.norm(ultime['Open'])
             dot_product = np.dot(ultime['Open'], sequence)
             norm_A = np.linalg.norm(sequence)
-            cosine_sim = dot_product / (norm_A * norm_B)
+            cosine_sim:float = dot_product / (norm_A * norm_B)
             coss.append(cosine_sim)
         index = np.argmax(coss)
         return list(self.sequences.keys())[index]
@@ -63,6 +58,7 @@ class ModelClr:
         df = data.get_data_yahoo(self.simbol[index][1], interval='1h', start=start, end=end)
         df = df.reset_index(drop=True)
         df = list(df['Open'][8:len(df['Open'])-8])
+
         try:
             self.sequences[nameClass] = df
             data = msgpack.packb(self.sequences)
